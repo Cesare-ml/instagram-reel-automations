@@ -2,6 +2,8 @@
 import { matches,selectVariant } from "./matching.js";
 import { verifySignature,secureEqual,extractComments,senderKey,graph,sendPrivate,sendPublic } from "./meta.js";
 import { page } from "./page.js";
+import { diagnostics,subscribeComments } from "./setup.js";
+import { manifest,appIcon,serviceWorker } from "./pwa.js";
 const DAY=86400000;
 const json=(x,status=200)=>Response.json(x,{status,headers:{"Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});
 const idOk=x=>typeof x==="string"&&/^\d{1,32}$/.test(x);
@@ -35,6 +37,7 @@ async function ingress(req,env){
   const sender=await senderKey(env.META_APP_SECRET,event.sender);
   statements.push(env.DB.prepare("INSERT OR IGNORE INTO jobs(comment_id,rule_id,sender_key,occurred_at,received_at,status,private_message,public_message,updated_at) VALUES(?,?,?,?,?,?,?,?,?)").bind(event.id,r.id,sender,event.occurred,Date.now(),env.LIVE_SENDS==="1"?"pending":"dry_run",r.private_message,"",Date.now()));
  }
+ if(events.length)statements.push(env.DB.prepare("INSERT INTO setup_state(id,received_at) VALUES(1,?) ON CONFLICT(id) DO UPDATE SET received_at=excluded.received_at").bind(Date.now()));
  if(statements.length)await env.DB.batch(statements);
  return json({accepted:true});
 }
@@ -71,6 +74,11 @@ async function api(req,env,url){
  if(req.method!=="GET"&&req.headers.get("Origin")!==url.origin)return json({error:"origin"},403);
  const path=url.pathname;
  if(path==="/api/status"&&req.method==="GET")return json({live:env.LIVE_SENDS==="1",configured:!!(env.IG_ACCESS_TOKEN&&env.IG_ACCOUNT_ID&&env.META_APP_SECRET&&env.META_VERIFY_TOKEN)});
+ if(path==="/api/setup"&&req.method==="GET")return json({checks:await diagnostics(env),callback:url.origin+"/webhook",live:env.LIVE_SENDS==="1"});
+ if(path==="/api/setup/subscribe"&&req.method==="POST"){
+  if(env.LIVE_SENDS==="1")return json({error:"disable_live_before_setup"},409);
+  const ok=await subscribeComments(env);return json({ok},ok?200:409);
+ }
  if(path==="/api/reels"&&req.method==="GET"){
   const cursor=url.searchParams.get("after");
   const data=await graph(env,encodeURIComponent(env.IG_ACCOUNT_ID)+"/media?fields=id,caption,media_product_type,permalink,timestamp&limit=50"+(cursor?"&after="+encodeURIComponent(cursor):""));
@@ -99,7 +107,10 @@ export default {
   try{
    if(url.pathname==="/webhook")return await ingress(req,env);
    if(url.pathname.startsWith("/api/"))return await api(req,env,url);
-   if(url.pathname==="/"&&req.method==="GET")return new Response(page,{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","Content-Security-Policy":"default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'","Referrer-Policy":"no-referrer","X-Content-Type-Options":"nosniff"}});
+   if(req.method==="GET"&&url.pathname==="/manifest.webmanifest")return new Response(JSON.stringify(manifest),{headers:{"Content-Type":"application/manifest+json","Cache-Control":"public,max-age=3600"}});
+   if(req.method==="GET"&&url.pathname==="/app-icon.svg")return new Response(appIcon,{headers:{"Content-Type":"image/svg+xml","Cache-Control":"public,max-age=3600","X-Content-Type-Options":"nosniff"}});
+   if(req.method==="GET"&&url.pathname==="/sw.js")return new Response(serviceWorker,{headers:{"Content-Type":"text/javascript","Cache-Control":"no-cache"}});
+   if(url.pathname==="/"&&req.method==="GET")return new Response(page,{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","Content-Security-Policy":"default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; manifest-src 'self'; img-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'","Referrer-Policy":"no-referrer","X-Content-Type-Options":"nosniff"}});
    return json({error:"not_found"},404);
   }catch(e){return json({error:"request_failed",code:safeError(e)},503)}
  },

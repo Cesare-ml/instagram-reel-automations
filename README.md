@@ -6,7 +6,13 @@ Free, self-hosted comment-to-DM automation for Instagram professional accounts. 
 2. Open your private dashboard, select the Reel, define keywords, private message, and public reply variants.
 3. The official Instagram webhook receives comments. On a match, the Worker sends one private reply, then a public reply only after the private send succeeds.
 
-## Install with your AI assistant
+## Mobile-first (in development)
+
+Goal: browser-only setup without programming or AI. Use native Meta Business Suite if it meets your needs. The dashboard includes diagnostics, Italian/English setup guidance and home-screen metadata; phone-only initial deployment is unverified.
+
+[Mobile setup](docs/MOBILE_SETUP.md) · [Product strategy](docs/PRODUCT_STRATEGY.md)
+
+## Install with your AI assistant (current fallback)
 
 Give the following prompt to Codex, Claude Code, or another coding assistant with terminal access:
 
