@@ -2,7 +2,7 @@
 import { matches,selectVariant } from "./matching.js";
 import { verifySignature,secureEqual,extractComments,senderKey,graph,sendPrivate,sendPublic } from "./meta.js";
 import { page } from "./page.js";
-import { diagnostics,subscribeComments } from "./setup.js";
+import { diagnostics,subscribeComments,initializeDatabase } from "./setup.js";
 import { manifest,appIcon,serviceWorker } from "./pwa.js";
 const DAY=86400000;
 const json=(x,status=200)=>Response.json(x,{status,headers:{"Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});
@@ -75,6 +75,12 @@ async function api(req,env,url){
  const path=url.pathname;
  if(path==="/api/status"&&req.method==="GET")return json({live:env.LIVE_SENDS==="1",configured:!!(env.IG_ACCESS_TOKEN&&env.IG_ACCOUNT_ID&&env.META_APP_SECRET&&env.META_VERIFY_TOKEN)});
  if(path==="/api/setup"&&req.method==="GET")return json({checks:await diagnostics(env),callback:url.origin+"/webhook",live:env.LIVE_SENDS==="1"});
+ if(path==="/api/setup/database"&&req.method==="POST"){
+  if(env.LIVE_SENDS!=="0")return json({error:"disable_live_before_setup"},409);
+  if(!env.DB?.prepare||!env.DB?.batch)return json({error:"missing_database_binding"},409);
+  await initializeDatabase(env);
+  return json({ok:true});
+ }
  if(path==="/api/setup/subscribe"&&req.method==="POST"){
   if(env.LIVE_SENDS==="1")return json({error:"disable_live_before_setup"},409);
   const ok=await subscribeComments(env);return json({ok},ok?200:409);
