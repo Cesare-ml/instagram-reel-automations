@@ -10,7 +10,7 @@ Free, self-hosted comment-to-DM automation for Instagram professional accounts. 
 
 Goal: browser-only setup without programming or AI. Use native Meta Business Suite if it meets your needs. The dashboard includes diagnostics, Italian/English setup guidance and home-screen metadata; phone-only initial deployment is unverified.
 
-[Browser-only installation (experimental)](docs/BROWSER_INSTALL.md) · [Mobile setup](docs/MOBILE_SETUP.md) · [Product strategy](docs/PRODUCT_STRATEGY.md)
+[Public guided installer (publication instructions)](docs/PUBLIC_INSTALLER.md) · [Browser-only installation (experimental)](docs/BROWSER_INSTALL.md) · [Mobile setup](docs/MOBILE_SETUP.md) · [Product strategy](docs/PRODUCT_STRATEGY.md)
 
 ## Install with your AI assistant (current fallback)
 
