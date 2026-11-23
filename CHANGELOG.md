@@ -23,3 +23,8 @@
 - Authenticated, same-origin, explicitly dry-run-only initial schema creation via D1 batch. Only fixed additive CREATE IF NOT EXISTS statements; no caller SQL.
 - Guided installer no longer requires pasting SQL; manual schema remains available.
 - Added schema equivalence, repeat initialization and endpoint guard tests. CI and real-device checks pending.
+
+## 2026-11-23 — Instagram account discovery
+- Authenticated account discovery from the configured Instagram token before IG_ACCOUNT_ID is supplied, with copyable ID and mismatch detection.
+- Optional operator-reported expiration date and seven-day warning; no automatic refresh or fabricated expiry.
+- Updated browser installer and added synthetic tests; CI and live Meta checks pending.
