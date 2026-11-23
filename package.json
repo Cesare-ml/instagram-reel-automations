@@ -12,7 +12,8 @@
     "dev": "cf dev",
     "deploy": "cf deploy",
     "build:browser": "node scripts/build-browser.mjs",
-    "check:browser": "node scripts/build-browser.mjs --check"
+    "check:browser": "node scripts/build-browser.mjs --check",
+    "build:installer": "node scripts/build-installer.mjs"
   },
   "devDependencies": {
     "cf": "latest",
