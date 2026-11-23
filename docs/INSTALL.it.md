@@ -15,3 +15,6 @@ La licenza è CPAL-1.0. Il software non richiede abbonamento o API IA. Cloudflar
 Per i dettagli tecnici, le variabili esatte e i link ufficiali consulta INSTALL.md.
 
 [Strategia mobile-first](PRODUCT_STRATEGY.md) · [Guida smartphone (sperimentale)](MOBILE_SETUP.md)
+
+## Rilevamento account e scadenza token
+Dopo aver inserito IG_ACCESS_TOKEN e GRAPH_VERSION in Cloudflare, apri il pannello privato e premi «Rileva account Instagram». Copia l'identificativo restituito nel segreto IG_ACCOUNT_ID, poi ripeti la verifica. Non cambiare account su installazioni esistenti senza controllare regole e credenziali. Se Meta indica una data di scadenza, puoi impostare IG_TOKEN_EXPIRES_AT come variabile testuale ISO 8601 con fuso orario. L'avviso è basato sulla data dichiarata, non su una verifica della scadenza da parte di Meta; il rinnovo rimane manuale.
