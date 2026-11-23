@@ -23,6 +23,20 @@ export async function initializeDatabase(env){
  await env.DB.prepare("SELECT received_at FROM setup_state LIMIT 1").all();
  return true;
 }
+export function tokenHealth(env, now=Date.now()){
+ const raw=env.IG_TOKEN_EXPIRES_AT;
+ if(!raw)return {state:"unknown",expiresAt:null};
+ const expiresAt=Date.parse(raw);
+ if(!Number.isFinite(expiresAt)||!/^\d{4}-\d{2}-\d{2}T/.test(raw))return {state:"invalid_date",expiresAt:null};
+ return {state:expiresAt<=now?"expired":expiresAt-now<=7*86400000?"expiring":"valid_estimate",expiresAt};
+}
+export async function discoverAccount(env,request=graph){
+ if(!env.IG_ACCESS_TOKEN||!env.GRAPH_VERSION)throw new Error("configuration");
+ const p=await request(env,"me?fields=user_id,username");
+ const id=String(p?.user_id||p?.id||"");
+ if(!/^\d{1,32}$/.test(id)||typeof p.username!=="string"||!p.username)throw new Error("invalid_profile");
+ return {id,username:p.username,matchesConfigured:env.IG_ACCOUNT_ID?accountMatches(p,env.IG_ACCOUNT_ID):null};
+}
 const errorCode=e=>/^meta_\d+_\d+$/.test(e?.message||"")?e.message:"connection_failed";
 export async function diagnostics(env,request=graph){
  const missing=missingBindings(env);
@@ -35,11 +49,12 @@ export async function diagnostics(env,request=graph){
   checks.dryRun={ok:!!job,at:job?.received_at??null};
   checks.webhook={ok:!!receipt,at:receipt?.received_at??null};
  }catch{checks.database.code=env.DB?.prepare?"initialize_database":"missing_database_binding"}
- if(missing.length)return checks;
+ if(!env.IG_ACCESS_TOKEN||!env.GRAPH_VERSION)return checks;
  try{
-  const p=await request(env,"me?fields=user_id,username");
-  checks.profile={ok:accountMatches(p,env.IG_ACCOUNT_ID),username:typeof p.username==="string"?p.username:null};
-  if(!checks.profile.ok){checks.profile.code="account_mismatch";return checks}
+  const p=await discoverAccount(env,request);
+  checks.profile={ok:p.matchesConfigured===true,username:p.username};
+  if(!checks.profile.ok){checks.profile.code=env.IG_ACCOUNT_ID?"account_mismatch":"account_id_missing";return checks}
+  if(missing.length)return checks;
  }catch(e){checks.profile.code=errorCode(e);return checks}
  try{
   checks.subscription.ok=hasCommentsSubscription(await request(env,encodeURIComponent(env.IG_ACCOUNT_ID)+"/subscribed_apps"));
