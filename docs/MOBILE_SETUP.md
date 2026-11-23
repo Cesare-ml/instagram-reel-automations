@@ -1,9 +1,9 @@
 # Smartphone setup — preview
 
-Initial browser-only provisioning is NOT yet verified; use INSTALL.md or INSTALL.it.md as fallback.
+Initial browser-only provisioning is NOT yet verified; try [browser-only installation](BROWSER_INSTALL.md) first; use INSTALL.md or INSTALL.it.md as fallback.
 
 1. Create free accounts at https://dash.cloudflare.com/ and https://developers.facebook.com/apps/.
-2. Provision the Worker and D1; apply all migrations. The Cloudflare Deploy button documents Wrangler config support; cf compatibility is not established, so one-click is not advertised yet.
+2. Provision the Worker and D1 using the ready-to-paste Worker and SQL files; no local tooling required by this route. The Cloudflare Deploy button documents Wrangler config support; cf compatibility is not established, so one-click is not advertised yet.
 3. Enter required secrets only in Cloudflare Worker settings. Keep LIVE_SENDS=0 and configure the cron.
 4. Open the Worker URL and log in with ADMIN_TOKEN. Copy the webhook address, configure the callback and comments field in the Meta app, then press the account subscription button.
 5. Run diagnostics and confirm the correct account, subscription, a real signed comment and a matching dry-run event. Green checks alone do not prove send permission. Follow INSTALL.md for live activation.
