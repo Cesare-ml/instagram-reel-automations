@@ -10,7 +10,9 @@
   "scripts": {
     "test": "node --test",
     "dev": "cf dev",
-    "deploy": "cf deploy"
+    "deploy": "cf deploy",
+    "build:browser": "node scripts/build-browser.mjs",
+    "check:browser": "node scripts/build-browser.mjs --check"
   },
   "devDependencies": {
     "cf": "latest",
