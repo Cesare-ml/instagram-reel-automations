@@ -28,3 +28,5 @@ A nontechnical tester installs and configures without a computer or terminal, wi
 Current fallback: README and INSTALL guides, optional coding assistant. Actual mobile provisioning and live tests remain pending.
 
 Public installer source implemented (installer/); see PUBLIC_INSTALLER.md. Publication and real-device installation remain release gates.
+
+Account discovery and optional operator-reported token expiry warnings are implemented. Automatic token refresh, secure credential persistence, and device validation remain outstanding.
