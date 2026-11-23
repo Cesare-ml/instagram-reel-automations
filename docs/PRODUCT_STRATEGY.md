@@ -26,3 +26,5 @@ No central SaaS, subscription, telemetry or AI runtime. AI-assisted setup remain
 A nontechnical tester installs and configures without a computer or terminal, without unexpected charges or exposing credentials. Verify actual Meta permissions and app review requirements; no guarantee of approval or unlimited free hosting. No cold messages, scraping or spam. The dashboard must be operable on a smartphone even if first-time provisioning still has limitations.
 
 Current fallback: README and INSTALL guides, optional coding assistant. Actual mobile provisioning and live tests remain pending.
+
+Public installer source implemented (installer/); see PUBLIC_INSTALLER.md. Publication and real-device installation remain release gates.
