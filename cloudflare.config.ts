@@ -15,6 +15,6 @@ export default defineConfig({
       GRAPH_VERSION: bindings.text("v24.0"),
       LIVE_SENDS: bindings.text("0"),
     },
-    triggers: [triggers.scheduled("*/1 * * * *")],
+    triggers: [triggers.scheduled({ schedule: "*/1 * * * *" })],
   },
 });
