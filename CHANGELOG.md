@@ -8,3 +8,8 @@
 ## 2026-11-23 — mobile-first onboarding
 - Guided diagnostics, subscription readback, signed comment receipt, Italian/English setup and home-screen metadata.
 - Phone-only deployment, token renewal and live tests pending.
+
+## 2026-11-23 — browser installation preview
+- Add deterministic single-file Worker and SQL artifacts for the dashboard editor.
+- Add a browser-only installation guide and source parity/schema tests.
+- Actual smartphone and Cloudflare/Meta deployment validation remain pending.
