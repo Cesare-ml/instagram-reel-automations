@@ -12,9 +12,10 @@ In the Worker settings, enter **Secrets** (never plaintext vars):
 - ADMIN_TOKEN: unique, randomly generated long password (at least 32 random bytes).
 - META_APP_SECRET: the app secret from the Meta Instagram setup; use the secret Meta uses for webhook signatures.
 - META_VERIFY_TOKEN: random independent string chosen by you; enter the same string in Meta webhook verification.
-- IG_ACCOUNT_ID: your professional Instagram user ID (not username).
+- IG_ACCOUNT_ID: your professional Instagram user ID (not username). After entering IG_ACCESS_TOKEN, use Find Instagram account in the authenticated dashboard to retrieve the ID and copy it here. Never change an existing account ID without reviewing its rules and credentials.
 - IG_ACCESS_TOKEN: a valid Instagram user access token with the relevant permissions.
 - GRAPH_VERSION: non-secret supported API version; the config default is v24.0; verify against current Meta version.
+- IG_TOKEN_EXPIRES_AT: optional non-secret ISO 8601 timestamp with timezone, if Meta provides an expiration date. The dashboard shows the operator-reported date and a seven-day warning; it is not provider-verified and does not renew tokens automatically.
 - LIVE_SENDS: non-secret; keep 0 until successful dry-run; set 1 explicitly after approval.
 
 Secrets must be entered by the account owner directly in the Cloudflare dashboard or via CLI secure prompts. Never commit them, share screenshots containing them, or paste them into AI chat. If cf deploy requires secrets before a Worker exists, use its guided secret provisioning or create the Worker first in the dashboard. Confirm a one-minute Cron Trigger is enabled; if not, configure it manually in Worker settings.
