@@ -1,0 +1,10 @@
+/* CPAL-1.0 — Original Code: Instagram Reel Automations. Copyright (c) 2026 Cesare-ml. See LICENSE Exhibit A and B. Provided AS IS, without warranty. */
+import test from "node:test";
+import assert from "node:assert/strict";
+import {matches,selectVariant} from "../src/matching.js";
+import {extractComments,verifySignature,sendPrivate,sendPublic} from "../src/meta.js";
+test("whole word, punctuation, accents and no substring",()=>{assert(matches("ÀSTA! 😍",["asta"]));assert(!matches("basta",["asta"]));assert(!matches("asta grazie",["asta"],"exact"));assert(matches("asta grazie",["asta"],"contains"))});
+test("rotation",()=>{assert.equal(selectVariant(["a","b"],"round_robin",3),"b");assert.equal(selectVariant(["a","b"],"random",0,()=>0.9),"b")});
+test("webhook scope",()=>{const value={id:"123",media:{id:"456"},from:{id:"789"},text:"asta"};const p={object:"instagram",entry:[{id:"111",time:1700000000,changes:[{field:"comments",value},{field:"comments",value:{...value,from:{id:"111"}}}]}]};assert.equal(extractComments(p,"111").length,1);assert.equal(extractComments(p,"222").length,0)});
+test("signature",async()=>{const raw=new TextEncoder().encode("{}"),secret="synthetic";const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);const bytes=new Uint8Array(await crypto.subtle.sign("HMAC",k,raw));const h="sha256="+[...bytes].map(x=>x.toString(16).padStart(2,"0")).join("");assert(await verifySignature(secret,raw,h));assert(!await verifySignature("wrong",raw,h))});
+test("official endpoints and comment recipient",async()=>{const requests=[];const fetcher=async(url,init)=>{requests.push([url,JSON.parse(init.body)]);return Response.json({id:"1",message_id:"2"})};const env={GRAPH_VERSION:"v24.0",IG_ACCOUNT_ID:"123",IG_ACCESS_TOKEN:"synthetic"};await sendPrivate(env,"456","hello",fetcher);await sendPublic(env,"456","sent",fetcher);assert.deepEqual(requests,[["https://graph.instagram.com/v24.0/123/messages",{recipient:{comment_id:"456"},message:{text:"hello"}}],["https://graph.instagram.com/v24.0/456/replies",{message:"sent"}]])});

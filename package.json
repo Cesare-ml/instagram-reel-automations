@@ -1,0 +1,20 @@
+{
+  "name": "instagram-reel-automations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "CPAL-1.0",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "dev": "cf dev",
+    "deploy": "cf deploy"
+  },
+  "devDependencies": {
+    "cf": "latest",
+    "vite": "latest",
+    "@cloudflare/vite-plugin": "latest"
+  }
+}

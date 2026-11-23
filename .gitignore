@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.dev.vars*
+.cloudflare/
+dist/
+*.sqlite*
+*.db
+*.pem
+*.key
+coverage/
+wrangler.local.*
