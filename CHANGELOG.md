@@ -13,3 +13,8 @@
 - Add deterministic single-file Worker and SQL artifacts for the dashboard editor.
 - Add a browser-only installation guide and source parity/schema tests.
 - Actual smartphone and Cloudflare/Meta deployment validation remain pending.
+
+## 2026-11-23 — public guided installer
+- Bilingual static setup wizard with local-only checklist, source copy/download buttons and optional AI prompt.
+- Deterministic same-origin assets with build revision and SHA-256 metadata; manual GitHub Pages publish workflow.
+- Publication, actual mobile walkthrough and real Meta test remain pending.
