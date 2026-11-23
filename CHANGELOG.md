@@ -18,3 +18,8 @@
 - Bilingual static setup wizard with local-only checklist, source copy/download buttons and optional AI prompt.
 - Deterministic same-origin assets with build revision and SHA-256 metadata; manual GitHub Pages publish workflow.
 - Publication, actual mobile walkthrough and real Meta test remain pending.
+
+## 2026-11-23 — initialize D1 from the dashboard
+- Authenticated, same-origin, explicitly dry-run-only initial schema creation via D1 batch. Only fixed additive CREATE IF NOT EXISTS statements; no caller SQL.
+- Guided installer no longer requires pasting SQL; manual schema remains available.
+- Added schema equivalence, repeat initialization and endpoint guard tests. CI and real-device checks pending.
