@@ -10,13 +10,13 @@ Official documentation: https://developers.cloudflare.com/d1/get-started/ and ht
 
 ## 2. Create the database
 
-In Cloudflare Storage & Databases > D1, create a database named instagram-reel-automations. Open its Console, copy [schema.sql](../deploy/schema.sql) and execute it. If the console only accepts one statement at a time, execute each statement in order. The schema is idempotent; never import a database from another user.
+In Cloudflare Storage & Databases > D1, create a database named instagram-reel-automations. Do not enter SQL yet. The authenticated setup panel can initialize the empty database after step 3. For manual fallback only, open Console and execute [schema.sql](../deploy/schema.sql), one statement at a time if necessary. Never import a database from another user.
 
 Go back to your Worker > Bindings > Add binding > D1 database. Set the binding name exactly to DB and select your database. Add a Cron Trigger every minute (*/1 * * * *), as described in https://developers.cloudflare.com/workers/configuration/cron-triggers/.
 
 ## 3. Set up your private access and Instagram
 
-In Worker Settings > Variables and Secrets add ADMIN_TOKEN as a Secret (at least 32 random bytes from a password manager). Add GRAPH_VERSION as a text variable with the supported Meta version (see INSTALL.md), and LIVE_SENDS as text 0. Never put secrets into a GitHub file or the Worker source. Open the Worker address, sign in with your ADMIN_TOKEN and use the setup panel.
+In Worker Settings > Variables and Secrets add ADMIN_TOKEN as a Secret (at least 32 random bytes from a password manager). Add GRAPH_VERSION as a text variable with the supported Meta version (see INSTALL.md), and LIVE_SENDS as text 0. Never put secrets into a GitHub file or the Worker source. Open the Worker address, sign in with your ADMIN_TOKEN and use the setup panel. Press Initialize database. The action requires LIVE_SENDS=0 and creates missing tables and indexes without deleting data; it is safe to repeat.
 
 Follow the Meta section in INSTALL.md or INSTALL.it.md. In Worker settings add secrets META_APP_SECRET, META_VERIFY_TOKEN, IG_ACCOUNT_ID, IG_ACCESS_TOKEN. Use the callback address displayed in the panel and subscribe to comments in the Meta dashboard. Press Subscribe to comments in the authenticated panel, then verify the checks. Keep LIVE_SENDS=0. Test with a consenting second account; only enable LIVE_SENDS=1 after the dry-run and permission checks.
 
@@ -27,7 +27,7 @@ Back up D1 privately. Pause live sends, replace the Worker with the latest revie
 ## Italiano
 
 1. Apri Workers & Pages, crea un Worker Hello World gratuito, premi Edit code, copia tutto il file worker.js dal link sopra e pubblica.
-2. Crea D1, apri Console, incolla schema.sql ed eseguilo. Collega il database al Worker con il nome DB e crea il trigger ogni minuto.
-3. Inserisci ADMIN_TOKEN nei segreti Cloudflare, GRAPH_VERSION e LIVE_SENDS=0 come variabili. Apri il pannello personale. Segui INSTALL.it.md per creare l'app Instagram e inserire gli altri segreti. Copia l'indirizzo webhook dal pannello e verifica la connessione.
+2. Crea D1 vuoto; non serve incollare SQL. Collega il database al Worker con il nome DB e crea il trigger ogni minuto.
+3. Inserisci ADMIN_TOKEN nei segreti Cloudflare, GRAPH_VERSION e LIVE_SENDS=0 come variabili. Apri il pannello personale e premi Inizializza database. Segui INSTALL.it.md per creare l'app Instagram e inserire gli altri segreti. Copia l'indirizzo webhook dal pannello e verifica la connessione.
 4. Fai un commento di prova da un altro account consenziente e verifica la modalità test prima di autorizzare invii reali.
 5. Aggiungi il pannello alla schermata Home. Se un passaggio non funziona da cellulare, prova la modalità sito desktop; non è ancora garantita la compatibilità dell'editor Cloudflare e Meta con tutti gli smartphone.
